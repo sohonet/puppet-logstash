@@ -48,6 +48,13 @@ class logstash::service {
   $startup_options = merge($default_startup_options, $logstash::startup_options)
   $jvm_options = $logstash::jvm_options
 
+  File {
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0664',
+    notify => Exec['logstash-system-install'],
+  }
+
   if $logstash::ensure == 'present' {
     case $logstash::status {
       'enabled': {
@@ -143,10 +150,4 @@ class logstash::service {
     Logstash::Plugin<| |> ~> Service['logstash']
   }
 
-  File {
-    owner  => 'root',
-    group  => 'root',
-    mode   => '0664',
-    notify => Exec['logstash-system-install'],
-  }
 }

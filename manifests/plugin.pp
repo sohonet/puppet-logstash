@@ -46,6 +46,13 @@ define logstash::plugin (
   require logstash::package
   $exe = "${logstash::home_dir}/bin/logstash-plugin"
 
+  Exec {
+    path        => '/bin:/usr/bin',
+    user        => $logstash::logstash_user,
+    timeout     => 1800,
+    environment => $environment,
+  }
+
   case $source { # Where should we get the plugin from?
     undef: {
       # No explict source, so search Rubygems for the plugin, by name.
@@ -109,10 +116,4 @@ define logstash::plugin (
     }
   }
 
-  Exec {
-    path        => '/bin:/usr/bin',
-    user        => $logstash::logstash_user,
-    timeout     => 1800,
-    environment => $environment,
-  }
 }
